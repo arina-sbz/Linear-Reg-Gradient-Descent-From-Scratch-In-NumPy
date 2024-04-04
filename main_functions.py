@@ -124,6 +124,7 @@ def train_linear_model(inputs, target, num_iterations, learning_rate):
     cost_list = []
     iterations = []
     
+    print(f"Learning rate: {learning_rate}")
     for iteration in range(num_iterations):  
         predictions = model_forward(inputs,w,b) # forward pass to get predictions
         iteration_cost = compute_cost(target,predictions) # compute the cost between target values and predictions
@@ -133,13 +134,14 @@ def train_linear_model(inputs, target, num_iterations, learning_rate):
             cost_list.append(iteration_cost)
             iterations.append(iteration)
             print(f"The cost for iteration {iteration} is {iteration_cost}")
+            print("--------")
 
         gradient_w, gradient_b = model_backward(inputs, target, predictions) # backward pass to compute gradients
         w, b = update_parameters(learning_rate, w, b, gradient_w, gradient_b) # update model parameters using the computed gradients
     return w, b, cost_list, iterations
 
 
-def show_plot(costs, learning_rates):
+def show_plot(costs, learning_rates, iterations,plot_title):
     """
     Display a plot comparing the cost function's value over iterations for different learning rates
 
@@ -150,11 +152,12 @@ def show_plot(costs, learning_rates):
     returns:
     the function shows a plot
     """
-    iterations = [0,200,400,600,800,1000] # fixed iterations where costs are recorded (x-axis)
 
+    plt.figure(figsize=(8, 6)) # set figure size
     [plt.plot(iterations, cost, label=f'α={rate}') for rate, cost in zip(learning_rates, costs)] # create a plot for each set of costs associated with a specific learning rate
         
     plt.ylabel('Cost') # set the y-axis label
     plt.xlabel('Iteration') # set the x-axis label
     plt.legend() # show the plot's legend
+    plt.savefig(f"{plot_title}.png",dpi=300) # save the plot's image
     plt.show()
